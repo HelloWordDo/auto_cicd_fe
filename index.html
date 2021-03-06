@@ -5,102 +5,127 @@
 		<title></title>
 		<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
 	</head>
+	<link rel="stylesheet" type="text/css" href="css/index.css"/>
 	<style type="text/css">
-		.item {
-			width: 20%;
-			height: auto;
-			margin: auto;
-		}
+
 	</style>
 	<body>
-		<div id="deploy">
-			<h1>部署</h1>
-			<div id="project">
-				<span>项目：</span>
-				<select v-model="projectSelected" class="item">
-					<option disabled value="">请选择</option>
-					<option v-for="option in projects">
-						{{ option }}
-					</option>
-				</select>
-				<span>---你选择了: {{ projectSelected }}</span>
+		<div class="contaner">
+			<div id="deploy">
+				<h1>部署</h1>
+				<div class="list">
+					<ul>
+						<li id="project">
+							<div >
+								<span>项目：</span>
+								<select v-model="projectSelected" class="item">
+									<option disabled value="">请选择</option>
+									<option v-for="option in projects">
+										{{ option }}
+									</option>
+								</select>
+								<span>
+									---你选择了: <span class="echo">{{ projectSelected }}</span>
+								</span>
+							</div>
+						</li>
+						<li id="service">
+							<div>
+								<span>服务名：</span>
+								<select v-model="serviceSelected" class="item">
+									<option disabled value="">请选择</option>
+									<option v-for="option in services" v-bind:value ="option">
+										{{ option }}
+									</option>
+								</select>
+								<span>
+									---你选择了: <span class="echo">{{ serviceSelected }}</span>
+								</span>
+							</div>
+						</li>
+						<li id="env">
+							<div>
+								<span>环境：</span>
+								<select v-model="envSelected" class="item">
+									<option disabled value="">请选择</option>
+									<option v-for="option in envs">
+										{{ option }}
+									</option>
+								</select>
+								<span>
+									---你选择了: <span class="echo">{{ envSelected }}</span>
+								</span>
+							</div>
+						</li>
+						<li id="releaseVersion">
+							<div>
+								<span>发版号：</span>
+								<select v-model="release" class="item">
+									<option disabled value="">请选择</option>
+									<option v-for="option in releases" v-bind:value ="option">
+										{{ option }}
+									</option>
+								  </select>
+								  <span>
+									  ---你选择了: <span class="echo">{{ release }}</span>
+								  </span>
+							</div>
+						</li>
+						<li id="branch">
+							<div>
+								<span>分支：</span>
+								<input v-model="branchName" placeholder="branch" class="item" />
+								<span>
+									---分支：<span class="echo">{{ branchName }}</span>
+								</span>
+							</div>
+						</li>
+						<li id="applicant">
+							<div>
+								<span>申请：</span>
+								<input  v-model="applicant" placeholder="User ID" class="item"/>
+								<span>
+									---申请：<span class="echo">{{ applicant }}</span>
+								</span>
+							</div>
+						</li>
+						<li id="reason">
+							<div>
+								<span>原因：</span>
+								<input  v-model="reason" placeholder="jiraId and description" class="item"/>
+								<span>
+									---原因：<span class="echo">{{ reason }}</span>
+								</span>
+							</div>
+						</li>
+					</ul>
+				</div>
+				<button type="button" @click="deployNow()">
+					立刻部署
+				</button>
 			</div>
-			<div id="service">
-				<span>服务名：</span>
-				<select v-model="serviceSelected" class="item">
-					<option disabled value="">请选择</option>
-					<option v-for="option in services" v-bind:value ="option">
-						{{ option }}
-					</option>
-				</select>
-				<span>---你选择了: {{ serviceSelected }}</span>
-			</div>
-			<div id="env">
-				<span>部署环境：</span>
-				<select v-model="envSelected" class="item">
-					<option disabled value="">请选择</option>
-					<option v-for="option in envs">
-						{{ option }}
-					</option>
-				</select>
-				<span>---你选择了: {{ envSelected }}</span>
-			</div>
-			<div id="releaseVersion">
-				<span>发版版本号：</span>
-				<select v-model="release" class="item">
-					<option disabled value="">请选择</option>
-					<option v-for="option in releases" v-bind:value ="option">
-						{{ option }}
-					</option>
-				  </select>
-				  <span>---你选择了: {{ release }}</span>
-			</div>
-			<div id="branch">
-				<span>部署分支：</span>
-				<input v-model="branchName" placeholder="branch" class="item" />
+			<div id="download">
 				<span>
-					---你输入的部署分支：{{ branchName }}
+					<h1>下载</h1>
 				</span>
+				<div id="start">
+					<span>开始时间：</span>
+					<input  v-model="start" placeholder="2021-03-01" class="item"/>
+					<span>
+						---开始时间：<span class="echo">{{ start }}</span>
+					</span>
+				</div>
+				<div id="end">
+					<span>结束时间：</span>
+					<input  v-model="end" placeholder="2021-04-01" class="item"/>
+					<span>
+						---结束时间：<span class="echo">{{ end }}</span>
+					</span>
+				</div>
+				<button type="button" @click="download()">
+					下载
+				</button>
 			</div>
-			<div id="applicant">
-				<span>部署申请人：</span>
-				<input  v-model="applicant" placeholder="applicant" class="item"/>
-				<span>
-					---你输入的部署申请人：{{ applicant }}
-				</span>
-			</div>
-			<div id="reason">
-				<span>部署原因：</span>
-				<input  v-model="reason" placeholder="jiraId and description" class="item"/>
-				<span>
-					---你输入的部署原因：{{ reason }}
-				</span>
-			</div>
-			<button type="button" @click="deployNow()">
-				立刻部署
-			</button>
-		</div>
-		<div id="download">
-			<span>
-				<h1>下载</h1>
-			</span>
-			<div id="start">
-				<span>开始时间：</span>
-				<input  v-model="start" placeholder="2021-03-01" class="item"/>
-				<span>
-					---你输入的开始时间：{{ start }}
-				</span>
-			</div>
-			<div id="end">
-				<span>结束时间：</span>
-				<input  v-model="end" placeholder="2021-04-01" class="item"/>
-				<span>
-					---你输入的结束时间：{{ end }}
-				</span>
-			</div>
-			<button type="button" @click="download()">
-				下载
-			</button>
 		</div>
 		<script type="text/javascript">
 		 	let deploy = new Vue({
