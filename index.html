@@ -14,6 +14,7 @@
 	</style>
 	<body>
 		<div id="deploy">
+			<h1>部署</h1>
 			<div id="project">
 				<span>项目：</span>
 				<select v-model="projectSelected" class="item">
@@ -61,6 +62,13 @@
 					---你输入的部署分支：{{ branchName }}
 				</span>
 			</div>
+			<div id="applicant">
+				<span>部署申请人：</span>
+				<input  v-model="applicant" placeholder="applicant" class="item"/>
+				<span>
+					---你输入的部署申请人：{{ applicant }}
+				</span>
+			</div>
 			<div id="reason">
 				<span>部署原因：</span>
 				<input  v-model="reason" placeholder="jiraId and description" class="item"/>
@@ -68,13 +76,32 @@
 					---你输入的部署原因：{{ reason }}
 				</span>
 			</div>
-			<div id="deploy">
-				<button type="button" @click="deployNow">
-					立刻部署
-				</button>
-			</div>
+			<button type="button" @click="deployNow()">
+				立刻部署
+			</button>
 		</div>
-		 
+		<div id="download">
+			<span>
+				<h1>下载</h1>
+			</span>
+			<div id="start">
+				<span>开始时间：</span>
+				<input  v-model="start" placeholder="2021-03-01" class="item"/>
+				<span>
+					---你输入的开始时间：{{ start }}
+				</span>
+			</div>
+			<div id="end">
+				<span>结束时间：</span>
+				<input  v-model="end" placeholder="2021-04-01" class="item"/>
+				<span>
+					---你输入的结束时间：{{ end }}
+				</span>
+			</div>
+			<button type="button" @click="download()">
+				下载
+			</button>
+		</div>
 		<script type="text/javascript">
 		 	let deploy = new Vue({
 				el: '#deploy',
@@ -85,43 +112,48 @@
 						var httpRequest = new XMLHttpRequest();//第一步：创建需要的对象
 						httpRequest.open('POST', this.deployUrl, true); //第二步：打开连接/***发送json格式文件必须设置请求头 ；如下 - */
 						httpRequest.setRequestHeader("Content-type","application/json");//设置请求头 注：post方式必须设置请求头（在建立连接后设置请求头）var obj = { name: 'zhansgan', age: 18 };
-						var obj = {};
+						var obj = {
+							'projectName':this.projectSelected,
+							'serviceName':this.serviceSelected,
+							'environment':this.envSelected,
+							'branch':this.branchName,
+							'releaseVersion':this.release,
+							'applicant':this.applicant,
+							'reason':this.reason,
+						};
 						httpRequest.send(JSON.stringify(obj));//发送请求 将json写入send中
 						/**
 						 * 获取数据后的处理程序
 						 */
 						httpRequest.onreadystatechange = function () {//请求后的回调接口，可将请求成功后要执行的程序写在其中
-						    if (httpRequest.readyState == 4 && httpRequest.status == 200) {//验证请求是否发送成功
-						        var json = httpRequest.responseText;//获取到服务端返回的数据
-						        console.log(json);
-						    } else {
-								console.log(httpRequest.responseText)
-							}
+							console.log(httpRequest.status)
+						    var json = httpRequest.responseText;//获取到服务端返回的数据
+						    console.log(json);
 						};
 					}
 				},
 				data: {
-					deployUrl: 'http://192.168.30.62:10099/jenkins/build',
+					deployUrl: 'http://127.0.0.1:10099/jenkins/build',
 					projectSelected: '',
 					projects: [
-						'SVECO',
-						'FAWMQB',
+						'sveco',
+						'fawmqb',
 					],
 					serviceSelected: '',
 					services: [
-						'Weather',
-						'Restaurant',
-						'Onlinemusic',
-						'Onlineradio',
-						'Flight',
-						'Train',
-						'Scenicspot',
-						'Hotel',
-						'Film',
-						'Show',
-						'News',
-						'Shortvideo',
-						'VoiceGame',
+						'weather',
+						'restaurant',
+						'onlinemusic',
+						'onlineradio',
+						'flight',
+						'train',
+						'scenicspot',
+						'hotel',
+						'film',
+						'show',
+						'news',
+						'shortvideo',
+						'voiceGame',
 					],
 					envSelected: '',
 					envs: [
@@ -140,9 +172,25 @@
 						'0.34.0',
 						'0.35.0',
 					],
+					applicant: '',
 					reason: '',
 				}
-			})
+			});
+			let download = new Vue({
+				el:'#download',
+				methods: {
+					download:function(){
+						var tmp = this.downloadUrl+'?startDate='+this.start+' 00:00:00&endDate='+this.end+' 00:00:00';
+						console.log(tmp)
+						window.open(tmp)
+					}
+				},
+				data: {
+					downloadUrl:'http://127.0.0.1:10099/management/download',
+					start: '',
+					end:'',
+				},
+			});
 		</script>
 	</body>
 </html>
