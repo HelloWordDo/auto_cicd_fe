@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<style type="text/css">
+		.item {
+			width: 20%;
+			height: auto;
+			margin: auto;
+		}
+	</style>
+	<body>
+		<div id="deploy">
+			<div id="project">
+				<span>项目：</span>
+				<select v-model="projectSelected" class="item">
+					<option disabled value="">请选择</option>
+					<option v-for="option in projects">
+						{{ option }}
+					</option>
+				</select>
+				<span>---你选择了: {{ projectSelected }}</span>
+			</div>
+			<div id="service">
+				<span>服务名：</span>
+				<select v-model="serviceSelected" class="item">
+					<option disabled value="">请选择</option>
+					<option v-for="option in services" v-bind:value ="option">
+						{{ option }}
+					</option>
+				</select>
+				<span>---你选择了: {{ serviceSelected }}</span>
+			</div>
+			<div id="env">
+				<span>部署环境：</span>
+				<select v-model="envSelected" class="item">
+					<option disabled value="">请选择</option>
+					<option v-for="option in envs">
+						{{ option }}
+					</option>
+				</select>
+				<span>---你选择了: {{ envSelected }}</span>
+			</div>
+			<div id="releaseVersion">
+				<span>发版版本号：</span>
+				<select v-model="release" class="item">
+					<option disabled value="">请选择</option>
+					<option v-for="option in releases" v-bind:value ="option">
+						{{ option }}
+					</option>
+				  </select>
+				  <span>---你选择了: {{ release }}</span>
+			</div>
+			<div id="branch">
+				<span>部署分支：</span>
+				<input v-model="branchName" placeholder="branch" class="item" />
+				<span>
+					---你输入的部署分支：{{ branchName }}
+				</span>
+			</div>
+			<div id="reason">
+				<span>部署原因：</span>
+				<input  v-model="reason" placeholder="jiraId and description" class="item"/>
+				<span>
+					---你输入的部署原因：{{ reason }}
+				</span>
+			</div>
+			<div id="deploy">
+				<button type="button" @click="deployNow">
+					立刻部署
+				</button>
+			</div>
+		</div>
+		 
+		<script type="text/javascript">
+		 	let deploy = new Vue({
+				el: '#deploy',
+				methods: {
+					deployNow: function(e){
+						console.log("触发立刻部署:"+this.deployUrl);
+						// alert("触发立刻部署:"+this.deployUrl);
+						var httpRequest = new XMLHttpRequest();//第一步：创建需要的对象
+						httpRequest.open('POST', this.deployUrl, true); //第二步：打开连接/***发送json格式文件必须设置请求头 ；如下 - */
+						httpRequest.setRequestHeader("Content-type","application/json");//设置请求头 注：post方式必须设置请求头（在建立连接后设置请求头）var obj = { name: 'zhansgan', age: 18 };
+						var obj = {};
+						httpRequest.send(JSON.stringify(obj));//发送请求 将json写入send中
+						/**
+						 * 获取数据后的处理程序
+						 */
+						httpRequest.onreadystatechange = function () {//请求后的回调接口，可将请求成功后要执行的程序写在其中
+						    if (httpRequest.readyState == 4 && httpRequest.status == 200) {//验证请求是否发送成功
+						        var json = httpRequest.responseText;//获取到服务端返回的数据
+						        console.log(json);
+						    } else {
+								console.log(httpRequest.responseText)
+							}
+						};
+					}
+				},
+				data: {
+					deployUrl: 'http://192.168.30.62:10099/jenkins/build',
+					projectSelected: '',
+					projects: [
+						'SVECO',
+						'FAWMQB',
+					],
+					serviceSelected: '',
+					services: [
+						'Weather',
+						'Restaurant',
+						'Onlinemusic',
+						'Onlineradio',
+						'Flight',
+						'Train',
+						'Scenicspot',
+						'Hotel',
+						'Film',
+						'Show',
+						'News',
+						'Shortvideo',
+						'VoiceGame',
+					],
+					envSelected: '',
+					envs: [
+						'dev',
+						'sit',
+						'uat',
+						'pet',
+						'prod',
+					],
+					branchName:'',
+					release: '',
+					releases: [
+						'0.31.0',
+						'0.32.0',
+						'0.33.0',
+						'0.34.0',
+						'0.35.0',
+					],
+					reason: '',
+				}
+			})
+		</script>
+	</body>
+</html>
