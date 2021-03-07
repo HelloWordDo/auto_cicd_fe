@@ -10,9 +10,12 @@
 
 	</style>
 	<body>
-		<div class="contaner">
+		<div class="header">
+			<h1>Connectivity Auto CICD</h1>
+		</div>
+		<div class="contaner1">
 			<div id="deploy">
-				<h1>部署</h1>
+				<h2>部 署</h2>
 				<div class="list">
 					<ul>
 						<li id="project">
@@ -81,8 +84,8 @@
 							</div>
 						</li>
 						<li id="applicant">
-							<div>
-								<span>申请：</span>
+							<div >
+								<span>申请人：</span>
 								<input  v-model="applicant" placeholder="User ID" class="item"/>
 								<span>
 									>>><span class="echo">{{ applicant }}</span>
@@ -92,7 +95,7 @@
 						<li id="reason">
 							<div>
 								<span>原因：</span>
-								<input  v-model="reason" placeholder="jiraId and description" class="item"/>
+								<input v-model="reason" placeholder="jiraId and description" style="width: 30%;"></input>
 								<span>
 									>>><span class="echo">{{ reason }}</span>
 								</span>
@@ -100,12 +103,17 @@
 						</li>
 					</ul>
 				</div>
-				<button type="button" @click="deployNow()">
+				<button type="button" @click="deployNow()" style="float: left;width: 45%;">
 					立刻部署
 				</button>
+				<button type="button" @click="deployInFuture()" style="float: right;width: 45%">
+					预约部署
+				</button>
 			</div>
+		</div>
+		<div class="contaner2">
 			<div id="download">
-				<h1>下载</h1>
+				<h2>下 载 Release Note</h2>
 				<div class="list">
 					<ul>
 						<li id="reason">
@@ -128,7 +136,7 @@
 						</li>
 					</ul>
 				</div>
-				<button type="button" @click="download()">
+				<button type="button" @click="download()" style="width: 5%;">
 					下载
 				</button>
 			</div>
@@ -136,6 +144,9 @@
 		<script type="text/javascript">
 		 	let deploy = new Vue({
 				el: '#deploy',
+				mounted:function(){
+					this.initDeployData();
+				},
 				methods: {
 					deployNow: function(e){
 						console.log("触发立刻部署:"+this.deployUrl);
@@ -156,44 +167,64 @@
 						/**
 						 * 获取数据后的处理程序
 						 */
-						httpRequest.onreadystatechange = function () {//请求后的回调接口，可将请求成功后要执行的程序写在其中
-							console.log(httpRequest.status)
-						    var json = httpRequest.responseText;//获取到服务端返回的数据
-						    console.log(json);
+						httpRequest.onreadystatechange = function (e) {//请求后的回调接口，可将请求成功后要执行的程序写在其中
+							if (httpRequest.readyState === 4 && httpRequest.status === 200) {
+								var json = JSON.parse(httpRequest.responseText);//获取到服务端返回的数据
+								console.log(json);
+								console.log(json.msgCode);
+								if (json.msgCode != '10000'){
+									var msgs = json.msg.split(";");
+									var error = '';
+									for (i = 1; i<msgs.length-1; i++){
+										error += i+'. '+msgs[i]+'\n';
+									}
+									alert('立刻部署触发失败，原因：\n' + error)
+								} else {
+									alert('立刻部署触发成功，部署结果会通过钉钉群通知')
+								}
+							}						
 						};
-					}
+					},
+					deployInFuture: function(e) {
+						alert('功能待开发')
+					},
+					initDeployData: function(e){
+						var _this = this;
+						var httpRequest = new XMLHttpRequest;
+						httpRequest.open('GET', _this.initDataUrl, true);
+						httpRequest.setRequestHeader("Content-type","application/json");//设置请求头 注：post方式必须设置请求头（在建立连接后设置请求头）var obj = { name: 'zhansgan', age: 18 };
+						httpRequest.send();
+						httpRequest.onreadystatechange = function (e) {
+							//请求后的回调接口，可将请求成功后要执行的程序写在其中
+							console.log(httpRequest.status);
+							//获取到服务端返回的数据
+							var jsonString = httpRequest.responseText;
+							console.log(jsonString);
+							if (httpRequest.readyState === 4 && httpRequest.status === 200) {
+								var json = JSON.parse(jsonString);
+								console.log(json);
+								if (json.msgCode !== '10000'){
+									console.log('异常处理');
+								} else {
+									_this.projects = json.content.projects;
+									console.log(_this.projects)
+									_this.services = json.content.services;
+									_this.envs = json.content.environments;
+								}
+							}
+							
+						};
+					},
 				},
 				data: {
 					deployUrl: 'http://192.168.30.62:10099/jenkins/build',
+					initDataUrl: 'http://192.168.30.62:10099/management/projectData',
 					projectSelected: '',
-					projects: [
-						'sveco',
-						'fawmqb',
-					],
+					projects: [],
 					serviceSelected: '',
-					services: [
-						'weather',
-						'restaurant',
-						'onlinemusic',
-						'onlineradio',
-						'flight',
-						'train',
-						'scenicspot',
-						'hotel',
-						'film',
-						'show',
-						'news',
-						'shortvideo',
-						'voiceGame',
-					],
+					services: [],
 					envSelected: '',
-					envs: [
-						'dev',
-						'sit',
-						'uat',
-						'pet',
-						'prod',
-					],
+					envs: [],
 					branchName:'',
 					release: '',
 					releases: [
