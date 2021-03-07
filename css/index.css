@@ -1,18 +1,24 @@
 body {
 	font-family: "microsoft yahei", monospace;
-	font-size: 16px;
+	font-size: 17px;
 }
 
 button {
 	margin-left: 15px;
-	background-color: #00557f;
+	background-color: #007fff;
 	color: #ffffff;
-	padding: 10px 15px;
+	padding: 7px 15px;
 	font-family: "microsoft yahei";
+	border-radius: 5px;
+	border: none;
+	width: 15%;
+	cursor: pointer;
 }
 
 button:hover {
 	background-color: #A52A2A;
+	background-color: #ffffff;
+	color: #007fff;
 }
 
 button:active {
@@ -33,20 +39,23 @@ button:active {
 	color: brown;
 }
 
-#deploy h1 {
-	color: darkblue;
-}
 #deploy {
 	margin-top: 50px;
 	margin-bottom: 100px;
-	font-size: 17px;
 }
+
+#deploy h1 {
+	color: darkblue;
+	margin-left: 15px;
+}
+
 
 #download {
 }
 
 #download h1 {
 	color: darkblue;
+	margin-left: 15px;
 }
 
 .list {

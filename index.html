@@ -25,7 +25,7 @@
 									</option>
 								</select>
 								<span>
-									---你选择了: <span class="echo">{{ projectSelected }}</span>
+									>>> <span class="echo">{{ projectSelected }}</span>
 								</span>
 							</div>
 						</li>
@@ -39,7 +39,7 @@
 									</option>
 								</select>
 								<span>
-									---你选择了: <span class="echo">{{ serviceSelected }}</span>
+									>>> <span class="echo">{{ serviceSelected }}</span>
 								</span>
 							</div>
 						</li>
@@ -53,7 +53,7 @@
 									</option>
 								</select>
 								<span>
-									---你选择了: <span class="echo">{{ envSelected }}</span>
+									>>> <span class="echo">{{ envSelected }}</span>
 								</span>
 							</div>
 						</li>
@@ -67,7 +67,7 @@
 									</option>
 								  </select>
 								  <span>
-									  ---你选择了: <span class="echo">{{ release }}</span>
+									  >>> <span class="echo">{{ release }}</span>
 								  </span>
 							</div>
 						</li>
@@ -76,7 +76,7 @@
 								<span>分支：</span>
 								<input v-model="branchName" placeholder="branch" class="item" />
 								<span>
-									---分支：<span class="echo">{{ branchName }}</span>
+									>>><span class="echo">{{ branchName }}</span>
 								</span>
 							</div>
 						</li>
@@ -85,7 +85,7 @@
 								<span>申请：</span>
 								<input  v-model="applicant" placeholder="User ID" class="item"/>
 								<span>
-									---申请：<span class="echo">{{ applicant }}</span>
+									>>><span class="echo">{{ applicant }}</span>
 								</span>
 							</div>
 						</li>
@@ -94,7 +94,7 @@
 								<span>原因：</span>
 								<input  v-model="reason" placeholder="jiraId and description" class="item"/>
 								<span>
-									---原因：<span class="echo">{{ reason }}</span>
+									>>><span class="echo">{{ reason }}</span>
 								</span>
 							</div>
 						</li>
@@ -105,22 +105,28 @@
 				</button>
 			</div>
 			<div id="download">
-				<span>
-					<h1>下载</h1>
-				</span>
-				<div id="start">
-					<span>开始时间：</span>
-					<input  v-model="start" placeholder="2021-03-01" class="item"/>
-					<span>
-						---开始时间：<span class="echo">{{ start }}</span>
-					</span>
-				</div>
-				<div id="end">
-					<span>结束时间：</span>
-					<input  v-model="end" placeholder="2021-04-01" class="item"/>
-					<span>
-						---结束时间：<span class="echo">{{ end }}</span>
-					</span>
+				<h1>下载</h1>
+				<div class="list">
+					<ul>
+						<li id="reason">
+							<div id="start">
+								<span>开始时间：</span>
+								<input  v-model="start" placeholder="2021-03-01" class="item"/>
+								<span>
+									>>><span class="echo">{{ start }}</span>
+								</span>
+							</div>
+						</li>
+						<li>
+							<div id="end">
+								<span>结束时间：</span>
+								<input  v-model="end" placeholder="2021-04-01" class="item"/>
+								<span>
+									>>><span class="echo">{{ end }}</span>
+								</span>
+							</div>
+						</li>
+					</ul>
 				</div>
 				<button type="button" @click="download()">
 					下载
