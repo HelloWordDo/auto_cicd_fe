@@ -142,6 +142,37 @@
 				</button>
 			</div>
 		</div>
+		<div class="contaner3">
+			<div id="taskHistory">
+				<h2>历史任务列表 -- 最近5条</h2>
+				<table class="taskHistoryTable" cellspacing="30px" cellpadding="1" valign="center">
+					<thead>
+						<tr>
+							<th>时间</th>
+							<th>项目</th>
+							<th>服务</th>
+							<th>环境</th>
+							<th>申请人</th>
+							<th>分支</th>
+							<th>发版号</th>
+							<th>状态</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr v-for="task in taskHistories">
+							<td v-text="task.creationDate"></td>
+							<td v-text="task.project"></td>
+							<td v-text="task.service"></td>
+							<td v-text="task.environment"></td>
+							<td v-text="task.applicant"></td>
+							<td v-text="task.branch"></td>
+							<td v-text="task.releaseVersion"></td>
+							<td v-text="task.result"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
 		<script type="text/javascript">
 		 	let deploy = new Vue({
 				el: '#deploy',
@@ -213,7 +244,6 @@
 									_this.envs = json.content.environments;
 								}
 							}
-							
 						};
 					},
 				},
@@ -253,6 +283,47 @@
 					start: '',
 					end:'',
 				},
+			});
+			let taskHistory = new Vue({
+				el:'#taskHistory',
+				methods: {
+					getTaksHistories: function(e){
+						var _this = this;
+						var httpRequest = new XMLHttpRequest;
+						httpRequest.open('GET', _this.taskHistoryUrl, true);
+						httpRequest.send();
+						httpRequest.onreadystatechange = function (e) {
+							//请求后的回调接口，可将请求成功后要执行的程序写在其中
+							// console.log(httpRequest.status);
+							//获取到服务端返回的数据
+							var jsonString = httpRequest.responseText;
+							// console.log(jsonString);
+							if (httpRequest.readyState === 4 && httpRequest.status === 200) {
+								var json = JSON.parse(jsonString);
+								if (json.msgCode !== '10000'){
+									console.log('异常处理');
+								} else {
+									_this.taskHistories = json.content;
+								}
+							}
+						};
+					},
+				},
+				data: {
+					taskHistoryUrl:'http://127.0.0.1:10099/management/taskHistory',
+					taskHistories: [],
+					timer: null,
+				},
+				mounted: function(){
+					this.getTaksHistories();
+					let _this = this
+					this.timer = setInterval(function(){
+						_this.getTaksHistories()
+					}, 30000);
+				},
+				destroyed:function(){
+					clearInterval(this.timer)
+				}
 			});
 		</script>
 	</body>
