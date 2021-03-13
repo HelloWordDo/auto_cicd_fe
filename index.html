@@ -96,7 +96,8 @@
 						<li id="reason">
 							<div>
 								<span>原因：</span>
-								<input v-model="reason" placeholder="jiraId and description" style="width: 30%;"></input>
+								<input v-model="reason" placeholder="jiraId and description" style="width: 95%;"></input>
+								<br>
 								<span>
 									>>><span class="echo">{{ reason }}</span>
 								</span>
@@ -206,10 +207,16 @@
 								console.log(json.msgCode);
 								if (json.msgCode != '10000'){
 									var msgs = json.msg.split(";");
+									console.log(msgs);
 									var error = '';
-									for (i = 1; i<msgs.length-1; i++){
-										error += i+'. '+msgs[i]+'\n';
+									if (msgs.length > 1) {
+										for (i = 0; i<msgs.length-1; i++){
+											error += i+1+'. '+msgs[i]+'\n';
+										}
+									} else {
+										error = json.msg;
 									}
+									console.log(error);
 									alert('立刻部署触发失败，原因：\n' + error)
 								} else {
 									alert('立刻部署触发成功，部署结果会通过钉钉群通知')
