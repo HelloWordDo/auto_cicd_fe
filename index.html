@@ -93,10 +93,19 @@
 								</span>
 							</div>
 						</li>
+						<li id="jiraId">
+							<div>
+								<span>Jira ID：</span>
+								<input v-model="jiraId" placeholder="Jira Id" class="item"/>
+								<span>
+									>>><span class="echo">{{ jiraId }}</span>
+								</span>
+							</div>
+						</li>
 						<li id="reason">
 							<div>
 								<span>原因：</span>
-								<input v-model="reason" placeholder="jiraId and description" style="width: 95%;"></input>
+								<input v-model="reason" placeholder="description" style="width: 90%;"></input>
 								<br>
 								<span>
 									>>><span class="echo">{{ reason }}</span>
@@ -118,7 +127,7 @@
 				<h2>下 载 Release Note</h2>
 				<div class="list">
 					<ul>
-						<li id="reason">
+						<li>
 							<div id="start">
 								<span>开始时间：</span>
 								<input  v-model="start" placeholder="2021-03-01" class="item"/>
@@ -195,6 +204,7 @@
 							'releaseVersion':this.release,
 							'applicant':this.applicant,
 							'reason':this.reason,
+							'jiraId':this.jiraId,
 						};
 						httpRequest.send(JSON.stringify(obj));//发送请求 将json写入send中
 						/**
@@ -246,9 +256,10 @@
 									console.log('异常处理');
 								} else {
 									_this.projects = json.content.projects;
-									console.log(_this.projects)
 									_this.services = json.content.services;
 									_this.envs = json.content.environments;
+									_this.release = json.content.release;
+									_this.releases = json.content.releases;
 								}
 							}
 						};
@@ -266,14 +277,10 @@
 					branchName:'',
 					release: '',
 					releases: [
-						'0.31.0',
-						'0.32.0',
-						'0.33.0',
-						'0.34.0',
-						'0.35.0',
 					],
 					applicant: '',
 					reason: '',
+					jiraId: '',
 				}
 			});
 			let download = new Vue({
