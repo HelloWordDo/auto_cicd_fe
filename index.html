@@ -183,6 +183,37 @@
 				</table>
 			</div>
 		</div>
+		<div class="contaner4">
+			<div id="waitingTasks">
+				<h2>等待部署任务列表</h2>
+				<table class="waitingTasksTable" cellspacing="30px" cellpadding="1" valign="center">
+					<thead>
+						<tr>
+							<th>项目</th>
+							<th>服务</th>
+							<th>环境</th>
+							<th>申请人</th>
+							<th>分支</th>
+							<th>发版号</th>
+							<th>JiraId</th>
+							<th>原因</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr v-for="task in waitingTasks">
+							<td v-text="task.projectName"></td>
+							<td v-text="task.serviceName"></td>
+							<td v-text="task.environment"></td>
+							<td v-text="task.applicant"></td>
+							<td v-text="task.branch"></td>
+							<td v-text="task.releaseVersion"></td>
+							<td v-text="task.jiraId"></td>
+							<td v-text="task.reason"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
 		<script type="text/javascript">
 		 	let deploy = new Vue({
 				el: '#deploy',
@@ -229,7 +260,7 @@
 									console.log(error);
 									alert('立刻部署触发失败，原因：\n' + error)
 								} else {
-									alert('立刻部署触发成功，部署结果会通过钉钉群通知')
+									alert(json.msg);
 								}
 							}						
 						};
@@ -333,6 +364,47 @@
 					let _this = this
 					this.timer = setInterval(function(){
 						_this.getTaksHistories()
+					}, 30000);
+				},
+				destroyed:function(){
+					clearInterval(this.timer)
+				}
+			});
+			let waitingTasks = new Vue({
+				el:'#waitingTasks',
+				methods: {
+					getWaitingTasks: function(e){
+						var _this = this;
+						var httpRequest = new XMLHttpRequest;
+						httpRequest.open('GET', _this.waitingTasksUrl, true);
+						httpRequest.send();
+						httpRequest.onreadystatechange = function (e) {
+							//请求后的回调接口，可将请求成功后要执行的程序写在其中
+							// console.log(httpRequest.status);
+							//获取到服务端返回的数据
+							var jsonString = httpRequest.responseText;
+							// console.log(jsonString);
+							if (httpRequest.readyState === 4 && httpRequest.status === 200) {
+								var json = JSON.parse(jsonString);
+								if (json.msgCode !== '10000'){
+									console.log('异常处理');
+								} else {
+									_this.waitingTasks = json.content;
+								}
+							}
+						};
+					},
+				},
+				data: {
+					waitingTasksUrl:'http://192.168.30.62:10099/management/waitingTasks',
+					waitingTasks: [],
+					timer: null,
+				},
+				mounted: function(){
+					this.getWaitingTasks();
+					let _this = this
+					this.timer = setInterval(function(){
+						_this.getWaitingTasks()
 					}, 30000);
 				},
 				destroyed:function(){

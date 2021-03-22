@@ -65,6 +65,14 @@ button:active {
 	color: brown;
 }
 
+.contaner4 {
+	width: 80%;
+	margin: auto;
+	background-color: beige;
+	color: brown;
+}
+
+
 #deploy {
 	margin-top: 50px;
 	margin-bottom: 100px;
@@ -94,6 +102,12 @@ button:active {
 	padding-top: 10px;
 }
 
+#waitingTasks h2 {
+	color: darkblue;
+	margin-left: 15px;
+	padding-top: 10px;
+}
+
 .taskHistoryTable {
 	margin-left: 15px;
 	font-family: verdana,arial,sans-serif;
@@ -111,6 +125,27 @@ button:active {
 }
 
 .taskHistoryTable td {
+	font-size: 15px;
+	color:#333333;
+}
+
+.waitingTasksTable {
+	margin-left: 15px;
+	font-family: verdana,arial,sans-serif;
+	color:#333333;
+	border-color: #999999;
+	text-align: center;
+	border-style: dashed;
+	border-radius: 20px;
+}
+
+.waitingTasksTable th {
+	background-color: #999999;
+	font-size: 20px;
+	color:#333333;
+}
+
+.waitingTasksTable td {
 	font-size: 15px;
 	color:#333333;
 }
